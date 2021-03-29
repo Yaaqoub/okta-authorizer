@@ -1,0 +1,69 @@
+service: okta-techchallenge
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  environment:
+    ISSUER: ${file(./config.${opt:stage, self:provider.stage, 'dev'}.json):issuer-uri}
+    AUDIENCE: ${file(./config.${opt:stage, self:provider.stage, 'dev'}.json):audience}
+    OKTA_CLIENT_ID: ${file(./config.${opt:stage, self:provider.stage,'dev'}.json):client-id}
+    OKTA_CLIENT_SECRET: ${file(./config.${opt:stage, self:provider.stage, 'dev'}.json):client-secret}
+    APP_REDIRECT_URI: ${file(./config.${opt:stage, self:provider.stage, 'dev'}.json):app-redirect-uri}
+
+functions:
+  #Authorizers
+  auth:
+    handler: authorizer/handler.auth
+  authBookings:
+    handler: authorizer/handler.bookings
+  authSensitive:
+    handler: authorizer/handler.sensitive
+
+  #Dummy API
+  callback:
+    handler: dummyapi.callback
+    events:
+      - http:
+          path: /callback
+          method: get
+  public:
+    handler: dummyapi.public
+    events:
+      - http:
+          path: /
+          method: get
+  authenticated:
+    handler: dummyapi.authenticated
+    events:
+      - http:
+          path: /authenticated
+          method: get
+          authorizer:
+            name: auth
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: ^Bearer [-0-9a-zA-z\.]*$
+  bookings:
+    handler: dummyapi.bookings
+    events:
+      - http:
+          path: /bookings
+          method: get
+          authorizer:
+            name: authBookings
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: ^Bearer [-0-9a-zA-z\.]*$
+  sensitive:
+    handler: dummyapi.sensitive
+    events:
+      - http:
+          path: /sensitive
+          method: get
+          authorizer:
+            name: authSensitive
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: ^Bearer [-0-9a-zA-z\.]*$
+            resultTtlInSeconds: 0

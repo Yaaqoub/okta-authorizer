@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "01c9eed6-c431-4407-b8ad-04f63f543c23",
+		"name": "Okta Specialist Tech Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Public",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{service-uri}}/dev/",
+					"protocol": "https",
+					"host": [
+						"{{service-uri}}"
+					],
+					"path": [
+						"dev",
+						""
+					]
+				},
+				"description": "This is a test call to allow you to validate your deployment."
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticated",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{service-uri}}/dev/authenticated",
+					"protocol": "https",
+					"host": [
+						"{{service-uri}}"
+					],
+					"path": [
+						"dev",
+						"authenticated"
+					]
+				},
+				"description": "This call should be made with a valid OAuth bearer token"
+			},
+			"response": []
+		},
+		{
+			"name": "Sensitive",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{service-uri}}/dev/sensitive",
+					"protocol": "https",
+					"host": [
+						"{{service-uri}}"
+					],
+					"path": [
+						"dev",
+						"sensitive"
+					]
+				},
+				"description": "This call returns the user's profile and should be introspected."
+			},
+			"response": []
+		},
+		{
+			"name": "Bookings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{service-uri}}/dev/bookings",
+					"protocol": "https",
+					"host": [
+						"{{service-uri}}"
+					],
+					"path": [
+						"dev",
+						"bookings"
+					]
+				},
+				"description": "This call returns the user's bookings.\nThe provided token should contain the scope \"bookings:read\""
+			},
+			"response": []
+		}
+	]
+}
